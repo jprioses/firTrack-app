@@ -1,0 +1,64 @@
+CREATE TABLE IF NOT EXISTS `Company` (
+  `company_code` varchar(140) NOT NULL,
+  `founder` varchar(140) NOT NULL,
+  PRIMARY KEY (`company_code`)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `Company` (`company_code`, `founder`) VALUES
+  ('C1', 'Monika'),
+  ('C2', 'Samantha');
+
+CREATE TABLE IF NOT EXISTS `Lead_manager` (
+  `lead_manager_code` varchar(140) NOT NULL,
+  `company_code` varchar(140) NOT NULL,
+  PRIMARY KEY (`lead_manager_code`),
+  FOREIGN KEY (company_code) REFERENCES Company(company_code)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `Lead_manager` (`lead_manager_code`, `company_code`) VALUES
+  ('LM1', 'C1'),
+  ('LM2', 'C2');
+
+CREATE TABLE IF NOT EXISTS `Senior_manager` (
+  `senior_manager_code` varchar(140) NOT NULL,
+  `lead_manager_code` varchar(140) NOT NULL,
+  `company_code` varchar(140) NOT NULL,
+  PRIMARY KEY (`senior_manager_code`),
+  FOREIGN KEY (lead_manager_code) REFERENCES Lead_manager(lead_manager_code),
+  FOREIGN KEY (company_code) REFERENCES Company(company_code)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `Senior_manager` (`senior_manager_code`,`lead_manager_code`, `company_code`) VALUES
+  ('SM1','LM1', 'C1'),
+  ('SM2','LM1', 'C1'),
+  ('SM3','LM2', 'C2');
+  
+CREATE TABLE IF NOT EXISTS `Manager` (
+  `manager_code` varchar(140) NOT NULL,
+  `senior_manager_code` varchar(140) NOT NULL,
+  `lead_manager_code` varchar(140) NOT NULL,
+  `company_code` varchar(140) NOT NULL,
+  PRIMARY KEY (`manager_code`),
+  FOREIGN KEY (senior_manager_code) REFERENCES Senior_manager(senior_manager_code),
+  FOREIGN KEY (lead_manager_code) REFERENCES Lead_manager(lead_manager_code),
+  FOREIGN KEY (company_code) REFERENCES Company(company_code)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `Manager` (`manager_code`,`senior_manager_code`,`lead_manager_code`, `company_code`) VALUES
+  ('M1','SM1','LM1', 'C1'),
+  ('M2','SM3','LM2', 'C2'),
+  ('M3','SM3','LM2', 'C2');
+  
+CREATE TABLE IF NOT EXISTS `Empleado` (
+  `employee_code` varchar(140) NOT NULL,
+  `manager_code` varchar(140) NOT NULL,
+  `senior_manager_code` varchar(140) NOT NULL,
+  `lead_manager_code` varchar(140) NOT NULL,
+  `company_code` varchar(140) NOT NULL,
+  PRIMARY KEY (`employee_code`),
+  FOREIGN KEY (manager_code) REFERENCES Manager(manager_code),
+  FOREIGN KEY (senior_manager_code) REFERENCES Senior_manager(senior_manager_code),
+  FOREIGN KEY (lead_manager_code) REFERENCES Lead_manager(lead_manager_code),
+  FOREIGN KEY (company_code) REFERENCES Company(company_code)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `Empleado` (`employee_code`,`manager_code`,`senior_manager_code`,`lead_manager_code`, `company_code`) VALUES
+  ('E1','M1','SM1','LM1', 'C1'),
+  ('E2','M1','SM1','LM1', 'C1'),
+  ('E3','M2','SM3','LM2', 'C2'),
+  ('E4','M3','SM3','LM2', 'C2');
